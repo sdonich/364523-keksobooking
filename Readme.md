@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Сергей Донич](https://up.htmlacademy.ru/javascript/12/user/364523).
-* Наставник: `Неизвестно`.
+* Наставник: [Ренат Туктаров].
 
 ---
 
