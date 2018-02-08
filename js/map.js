@@ -13,8 +13,8 @@ var PHOTO_HEIGHT = '70px';
 var mainMap = document.querySelector('.map');
 mainMap.classList.remove('map--faded');
 var mapPins = document.querySelector('.map__pins');
-var similaradvertsTemplate = document.querySelector('#template-pattern').content.querySelector('.map__pin');
-var popupCardTemplate = document.querySelector('#template-pattern').content.querySelector('.map__card');
+var similaradvertsTemplate = document.querySelector('template').content.querySelector('.map__pin');
+var popupCardTemplate = document.querySelector('template').content.querySelector('.map__card');
 var mapCard = popupCardTemplate.cloneNode(true);
 
 // данные для массива c похожими объявлениями
@@ -28,9 +28,9 @@ var getLocationY = function () {
 
 
 var avatars = [1, 2, 3, 4, 5, 6, 7, 8];
-var avatarIndex;
+
 var getAvatar = function () {
-  avatarIndex = Math.random() * (avatars.length);
+  avatarIndex = Math.random() * avatars.length;
   avatarIndex = Math.floor(avatarIndex);
   return avatarIndex;
 };
@@ -46,11 +46,11 @@ var titleOffer = [
   'Неуютное бунгало по колено в воде'
 ];
 var getTitleOffer = function () {
-  return titleOffer[Math.floor(Math.random() * (titleOffer.length))];
+  return titleOffer[Math.floor(Math.random() * titleOffer.length)];
 };
 
-var priceOffer = function (cuttencyType) {
-  return Math.round(MIN_PRICE + Math.random() * (MAX_PRICE - MIN_PRICE)) + cuttencyType;
+var priceOffer = function (currencyType) {
+  return Math.round(MIN_PRICE + Math.random() * (MAX_PRICE - MIN_PRICE)) + currencyType;
 };
 
 var typeOffer = ['flat', 'house', 'bungalo'];
@@ -102,15 +102,19 @@ var randomFeatures = function () {
 var adverts = [];
 
 for (var i = 0; i < AMOUNT_MAP_PINS; i++) {
+  var avatarIndex = getAvatar();
+  var locationX = getLocationX();
+  var locationY = getLocationY();
+
   adverts.push({
-    author: 'img/avatars/user0' + avatars[getAvatar()] + '.png',
+    author: 'img/avatars/user0' + avatars[avatarIndex] + '.png',
     location: {
-      сoordinateX: getLocationX() + 'px',
-      сoordinateY: getLocationY() + 'px'
+      x: locationX + 'px',
+      y: locationY + 'px'
     },
     offer: {
       title: getTitleOffer(),
-      address: getLocationX() + ', ' + getLocationY(),
+      address: locationX + ', ' + locationY,
       price: priceOffer('\u20BD/ночь'),
       type: getTypeOffer(),
       rooms: getRooms(),
@@ -142,8 +146,8 @@ for (var i = 0; i < AMOUNT_MAP_PINS; i++) {
 var renderMapPin = function (MapPin) {
   var mapPin = similaradvertsTemplate.cloneNode(true);
 
-  mapPin.style.left = MapPin.location.сoordinateX;
-  mapPin.style.top = MapPin.location.сoordinateY;
+  mapPin.style.left = MapPin.location.x;
+  mapPin.style.top = MapPin.location.y;
   mapPin.querySelector('img').src = MapPin.author;
   return mapPin;
 };
@@ -167,10 +171,12 @@ var addMapCardPhoto = function (photo) {
 var fragmentPopupCard = document.createDocumentFragment();
 var renderPopupCard = function (advert) {
   fragmentPopupCard.appendChild(mapCard);
+  var specification = mapCard.querySelectorAll('p');
+
   mapCard.querySelector('img').src = advert.author;
   mapCard.querySelector('h3').textContent = advert.offer.title;
-  mapCard.querySelector('p').querySelector('small').textContent = advert.offer.address;
-  mapCard.querySelector('.popup__price').textContent = advert.offer.price;
+  specification[0].querySelector('small').textContent = advert.offer.address;
+  specification[1].textContent = advert.offer.price;
   mapCard.querySelector('h4').textContent = advert.offer.type;
 
   var amountRooms = ' комнаты';
@@ -182,8 +188,8 @@ var renderPopupCard = function (advert) {
     amountGuests = ' гостя';
   }
 
-  mapCard.querySelector('.lodging').textContent = advert.offer.rooms + amountRooms + ' для ' + advert.offer.guests + amountGuests;
-  mapCard.querySelector('.check').textContent = 'Заезд после ' + advert.offer.chekin + ', выезд до ' + advert.offer.chekout;
+  specification[2].textContent = advert.offer.rooms + amountRooms + ' для ' + advert.offer.guests + amountGuests;
+  specification[3].textContent = 'Заезд после ' + advert.offer.chekin + ', выезд до ' + advert.offer.chekout;
 
   for (i = 0; i < advert.offer.features.length; i++) {
     mapCard.querySelector(advert.offer.features[i]).style.display = randomFeatures();
