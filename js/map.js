@@ -10,6 +10,10 @@ var AMOUNT_MAP_PINS = 8;
 var PHOTO_WIDTH = '70px';
 var PHOTO_HEIGHT = '70px';
 
+var random = function (min, max) {
+  return Math.round(min + Math.random() * (max - min));
+};
+
 var mainMap = document.querySelector('.map');
 mainMap.classList.remove('map--faded');
 var mapPins = document.querySelector('.map__pins');
@@ -19,11 +23,13 @@ var mapCard = popupCardTemplate.cloneNode(true);
 
 // данные для массива c похожими объявлениями
 var getLocationX = function () {
-  return Math.round(MIN_AREA_X + Math.random() * (MAX_AREA_X - MIN_AREA_X));
+  return random(MIN_AREA_X, MAX_AREA_X);
+  // return Math.round(MIN_AREA_X + Math.random() * (MAX_AREA_X - MIN_AREA_X));
 };
 
 var getLocationY = function () {
-  return Math.round(MIN_AREA_Y + Math.random() * (MAX_AREA_Y - MIN_AREA_Y));
+  return random(MIN_AREA_Y, MAX_AREA_Y);
+  // return Math.round(MIN_AREA_Y + Math.random() * (MAX_AREA_Y - MIN_AREA_Y));
 };
 
 
@@ -50,7 +56,8 @@ var getTitleOffer = function () {
 };
 
 var priceOffer = function (currencyType) {
-  return Math.round(MIN_PRICE + Math.random() * (MAX_PRICE - MIN_PRICE)) + currencyType;
+  return random(MIN_PRICE, MAX_PRICE) + currencyType;
+  // return Math.round(MIN_PRICE + Math.random() * (MAX_PRICE - MIN_PRICE)) + currencyType;
 };
 
 var typeOffer = ['flat', 'house', 'bungalo'];
@@ -69,13 +76,17 @@ var getTypeOffer = function () {
 var getRooms = function () {
   var maxRooms = 5;
   var minRooms = 1;
-  return Math.round(minRooms + Math.random() * (maxRooms - minRooms));
+
+  return random(minRooms, maxRooms);
+  // return Math.round(minRooms + Math.random() * (maxRooms - minRooms));
 };
 
 var getGuests = function () {
   var maxGuests = 20;
-  var minRooms = 1;
-  return Math.round(minRooms + Math.random() * (maxGuests - minRooms));
+  var minGuests = 1;
+
+  return random(maxGuests, minGuests);
+  // return Math.round(minRooms + Math.random() * (maxGuests - minRooms));
 };
 
 var chekinOffer = ['12:00', '13:00', '14:00'];
