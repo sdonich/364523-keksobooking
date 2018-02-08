@@ -24,12 +24,10 @@ var mapCard = popupCardTemplate.cloneNode(true);
 // данные для массива c похожими объявлениями
 var getLocationX = function () {
   return random(MIN_AREA_X, MAX_AREA_X);
-  // return Math.round(MIN_AREA_X + Math.random() * (MAX_AREA_X - MIN_AREA_X));
 };
 
 var getLocationY = function () {
   return random(MIN_AREA_Y, MAX_AREA_Y);
-  // return Math.round(MIN_AREA_Y + Math.random() * (MAX_AREA_Y - MIN_AREA_Y));
 };
 
 
@@ -57,7 +55,6 @@ var getTitleOffer = function () {
 
 var priceOffer = function (currencyType) {
   return random(MIN_PRICE, MAX_PRICE) + currencyType;
-  // return Math.round(MIN_PRICE + Math.random() * (MAX_PRICE - MIN_PRICE)) + currencyType;
 };
 
 var typeOffer = ['flat', 'house', 'bungalo'];
@@ -78,7 +75,6 @@ var getRooms = function () {
   var minRooms = 1;
 
   return random(minRooms, maxRooms);
-  // return Math.round(minRooms + Math.random() * (maxRooms - minRooms));
 };
 
 var getGuests = function () {
@@ -86,7 +82,6 @@ var getGuests = function () {
   var minGuests = 1;
 
   return random(maxGuests, minGuests);
-  // return Math.round(minRooms + Math.random() * (maxGuests - minRooms));
 };
 
 var chekinOffer = ['12:00', '13:00', '14:00'];
