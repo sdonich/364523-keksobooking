@@ -40,9 +40,9 @@ var random = function (min, max) {
   return Math.round(min + Math.random() * (max - min));
 };
 
-var adverts = [];
-
 var createAdverts = function () {
+
+  var adverts = [];
 
   var getLocationX = function () {
     return random(MIN_AREA_X, MAX_AREA_X);
@@ -152,6 +152,7 @@ var createAdverts = function () {
     });
     avatars.splice(avatarIndex, 1);
   }
+  return adverts;
 };
 
 // отрисовка меток похожих объявлений
@@ -171,7 +172,7 @@ var setupPinHandler = function (pin, data) {
   });
 };
 
-var createMapPins = function () {
+var createMapPins = function (adverts) {
 
   for (var i = 0; i < AMOUNT_MAP_PINS; i++) {
     var pin = renderMapPin(adverts[i]);
@@ -232,9 +233,9 @@ mainPin.addEventListener('mouseup', function () {
 
   mainMap.classList.remove('map--faded');
   formNotice.classList.remove('notice__form--disabled');
-  createAdverts();
+  var adverts = createAdverts();
 
-  var pinsFragment = createMapPins();
+  var pinsFragment = createMapPins(adverts);
   mapPins.appendChild(pinsFragment);
 
   for (var i = 0; i < fieldsets.length; i++) {
