@@ -9,19 +9,32 @@ var MIN_PRICE = 1000;
 var AMOUNT_MAP_PINS = 8;
 var PHOTO_WIDTH = '70px';
 var PHOTO_HEIGHT = '70px';
-
-var random = function (min, max) {
-  return Math.round(min + Math.random() * (max - min));
-};
+var MAIN_PIN_RADIUS = 31;
 
 var mainMap = document.querySelector('.map');
-mainMap.classList.remove('map--faded');
 var mapPins = document.querySelector('.map__pins');
 var similaradvertsTemplate = document.querySelector('template').content.querySelector('.map__pin');
 var popupCardTemplate = document.querySelector('template').content.querySelector('.map__card');
 var mapCard = popupCardTemplate.cloneNode(true);
+var mainPin = mainMap.querySelector('.map__pin--main').querySelector('img');
+var mainCoordinateX = Math.round(mainPin.getBoundingClientRect().left + window.scrollX) + MAIN_PIN_RADIUS;
+var mainCoordinateY = Math.round(mainPin.getBoundingClientRect().top + window.scrollY) + MAIN_PIN_RADIUS;
+var formNotice = document.querySelector('.notice__form');
+var fieldsets = formNotice.querySelectorAll('fieldset');
+var mainPinAdress = fieldsets[2].querySelector('input');
+mainPinAdress.value = mainCoordinateX + ', ' + mainCoordinateY;
 
-// данные для массива c похожими объявлениями
+// отключение формы до активации карты
+for (i = 0; i < fieldsets.length; i++) {
+  fieldsets[i].disabled = true;
+}
+
+// функция для рандома
+var random = function (min, max) {
+  return Math.round(min + Math.random() * (max - min));
+};
+
+// функции и данные для создания массива с похожими объявлениями
 var getLocationX = function () {
   return random(MIN_AREA_X, MAX_AREA_X);
 };
@@ -29,7 +42,6 @@ var getLocationX = function () {
 var getLocationY = function () {
   return random(MIN_AREA_Y, MAX_AREA_Y);
 };
-
 
 var avatars = [1, 2, 3, 4, 5, 6, 7, 8];
 
@@ -94,17 +106,7 @@ var getChekoutTime = function () {
   return chekoutOffer[Math.floor(Math.random() * (chekoutOffer.length))];
 };
 
-// получение рандомной вставки дополнительных удобств
-var randomFeatures = function () {
-  var x = Math.random();
-  if (x > 0.5) {
-    return 'none';
-  }
-  return '';
-};
-
-
-// объект с похожими объявлениями
+// массив "Похожие объявления"
 var adverts = [];
 
 for (var i = 0; i < AMOUNT_MAP_PINS; i++) {
@@ -143,12 +145,10 @@ for (var i = 0; i < AMOUNT_MAP_PINS; i++) {
       ]
     }
   });
-
   avatars.splice(avatarIndex, 1);
-
 }
 
-// отрисовка указателей похожих объявлений
+// отрисовка меток похожих объявлений
 var renderMapPin = function (MapPin) {
   var mapPin = similaradvertsTemplate.cloneNode(true);
 
@@ -158,25 +158,33 @@ var renderMapPin = function (MapPin) {
   return mapPin;
 };
 
+// Ренат написал--------------
+// var setupPinHandler = function (pin, evt) {
+//   pin.querySelector('img').addEventListener('click', someHandler(evt));
+// };
+// ___________________________
+
 var fragmentMapPin = document.createDocumentFragment();
+
 for (i = 0; i < AMOUNT_MAP_PINS; i++) {
+
+  // Ренат написал--------------
+  // var pin = renderMapPin(adverts[i]);
+  // setupPinHandler(pin, adverts[i]);
+  // fragmentMapPin.appendChild(pin);
+  // ___________________________
   fragmentMapPin.appendChild(renderMapPin(adverts[i]));
 }
 
-// отрисовка фотографий квартиры
-var addMapCardPhoto = function (photo) {
-  var mapCardPhoto = mapCard.querySelector('.popup__pictures').querySelector('img').cloneNode(true);
-
-  mapCardPhoto.src = photo;
-  mapCardPhoto.style.width = PHOTO_WIDTH;
-  mapCardPhoto.style.height = PHOTO_HEIGHT;
-  return mapCardPhoto;
-};
-
-// отрисовка popup'а выбранного объявления
+// функция для отрисовки попапа выбранного похожего объявления
 var fragmentPopupCard = document.createDocumentFragment();
 var renderPopupCard = function (advert) {
-  fragmentPopupCard.appendChild(mapCard);
+  var mapCardPhoto = mapCard.querySelector('.popup__pictures');
+
+  while (mapCard.querySelector('.popup__pictures').lastChild) {
+    mapCard.querySelector('.popup__pictures').removeChild(mapCard.querySelector('.popup__pictures').lastChild);
+  }
+
   var specification = mapCard.querySelectorAll('p');
 
   mapCard.querySelector('img').src = advert.author;
@@ -197,20 +205,61 @@ var renderPopupCard = function (advert) {
   specification[2].textContent = advert.offer.rooms + amountRooms + ' для ' + advert.offer.guests + amountGuests;
   specification[3].textContent = 'Заезд после ' + advert.offer.chekin + ', выезд до ' + advert.offer.chekout;
 
-  for (i = 0; i < advert.offer.features.length; i++) {
-    mapCard.querySelector(advert.offer.features[i]).style.display = randomFeatures();
-  }
+  specification[4].textContent = advert.offer.description;
 
-  mapCard.querySelector('ul').nextElementSibling.textContent = advert.offer.description;
+  var renderMapCardPhoto = function () {
+    var addMapCardPhoto = function (photo) {
+      var cardPhoto = popupCardTemplate.querySelector('.popup__pictures').querySelector('li').cloneNode(true);
+      cardPhoto.querySelector('img').style.width = PHOTO_WIDTH;
+      cardPhoto.querySelector('img').style.height = PHOTO_HEIGHT;
+      cardPhoto.querySelector('img').src = photo;
+      return cardPhoto;
+    };
+    for (var j = 0; j < advert.offer.photos.length; j++) {
+      mapCardPhoto.appendChild(addMapCardPhoto(advert.offer.photos[j]));
+    }
+    return mapCardPhoto;
+  };
+  renderMapCardPhoto();
 
-  for (i = 0; i < advert.offer.photos.length; i++) {
-    mapCard.appendChild(addMapCardPhoto(advert.offer.photos[i]));
-  }
-
-  return fragmentPopupCard;
+  return mapCard;
 };
 
-// отрисовка карты со всеми объектами
-renderPopupCard(adverts[0]);
-mapPins.appendChild(fragmentMapPin);
-mainMap.appendChild(fragmentPopupCard);
+
+// функция для события "Клик метки по похожему объявлению"
+var someHandler = function (evt) {
+
+  for (i = 0; i < adverts.length; i++) {
+    var x = adverts[i];
+    var y = evt.target.parentNode;
+    var xxx = x.location.x;
+    var yyy = y.offsetLeft + 'px';
+
+    if (xxx === yyy) {
+      fragmentPopupCard.appendChild(renderPopupCard(adverts[i]));
+      mainMap.appendChild(fragmentPopupCard);
+    }
+  }
+};
+
+// функция для события "Клик по главной метке"
+var mainPinClickHandler = function () {
+  mainMap.classList.remove('map--faded');
+  formNotice.classList.remove('notice__form--disabled');
+  mapPins.appendChild(fragmentMapPin);
+
+  for (i = 0; i < fieldsets.length; i++) {
+    fieldsets[i].disabled = false;
+  }
+
+  var imgPin = mapPins.querySelectorAll('img');
+  for (i = 0; i < imgPin.length; i++) {
+    if (!imgPin[i].parentNode.classList.contains('map__pin--main')) {
+
+      imgPin[i].addEventListener('click', someHandler);
+    }
+  }
+};
+
+mainPin.addEventListener('mouseup', mainPinClickHandler);
+
