@@ -23,6 +23,8 @@ var formNotice = document.querySelector('.notice__form');
 var fieldsets = formNotice.querySelectorAll('fieldset');
 var mainPinAdress = fieldsets[2].querySelector('input');
 mainPinAdress.value = mainCoordinateX + ', ' + mainCoordinateY;
+var fragmentMapPin = document.createDocumentFragment();
+var fragmentPopupCard = document.createDocumentFragment();
 
 // отключение формы до активации карты
 for (i = 0; i < fieldsets.length; i++) {
@@ -151,48 +153,42 @@ for (var i = 0; i < AMOUNT_MAP_PINS; i++) {
 // отрисовка меток похожих объявлений
 var renderMapPin = function (MapPin) {
   var mapPin = similaradvertsTemplate.cloneNode(true);
-
   mapPin.style.left = MapPin.location.x;
   mapPin.style.top = MapPin.location.y;
   mapPin.querySelector('img').src = MapPin.author;
   return mapPin;
 };
 
-// Ренат написал--------------
-// var setupPinHandler = function (pin, evt) {
-//   pin.querySelector('img').addEventListener('click', someHandler(evt));
-// };
-// ___________________________
+var setupPinHandler = function (pin, data) {
+  pin.querySelector('img').addEventListener('click', function () {
+    fragmentPopupCard.appendChild(renderPopupCard(data));
+    mainMap.appendChild(fragmentPopupCard);
+  });
+};
 
-var fragmentMapPin = document.createDocumentFragment();
+
+
+
 
 for (i = 0; i < AMOUNT_MAP_PINS; i++) {
 
-  // Ренат написал--------------
-  // var pin = renderMapPin(adverts[i]);
-  // setupPinHandler(pin, adverts[i]);
-  // fragmentMapPin.appendChild(pin);
-  // ___________________________
-  fragmentMapPin.appendChild(renderMapPin(adverts[i]));
+  var pin = renderMapPin(adverts[i]);
+  setupPinHandler(pin, adverts[i]);
+  fragmentMapPin.appendChild(pin);
 }
 
 // функция для отрисовки попапа выбранного похожего объявления
-var fragmentPopupCard = document.createDocumentFragment();
 var renderPopupCard = function (advert) {
   var mapCardPhoto = mapCard.querySelector('.popup__pictures');
-
   while (mapCard.querySelector('.popup__pictures').lastChild) {
     mapCard.querySelector('.popup__pictures').removeChild(mapCard.querySelector('.popup__pictures').lastChild);
   }
-
   var specification = mapCard.querySelectorAll('p');
-
   mapCard.querySelector('img').src = advert.author;
   mapCard.querySelector('h3').textContent = advert.offer.title;
   specification[0].querySelector('small').textContent = advert.offer.address;
   specification[1].textContent = advert.offer.price;
   mapCard.querySelector('h4').textContent = advert.offer.type;
-
   var amountRooms = ' комнаты';
   if (advert.offer.rooms === 1) {
     amountRooms = ' комната';
@@ -201,12 +197,9 @@ var renderPopupCard = function (advert) {
   if (advert.offer.guests === 1) {
     amountGuests = ' гостя';
   }
-
   specification[2].textContent = advert.offer.rooms + amountRooms + ' для ' + advert.offer.guests + amountGuests;
   specification[3].textContent = 'Заезд после ' + advert.offer.chekin + ', выезд до ' + advert.offer.chekout;
-
   specification[4].textContent = advert.offer.description;
-
   var renderMapCardPhoto = function () {
     var addMapCardPhoto = function (photo) {
       var cardPhoto = popupCardTemplate.querySelector('.popup__pictures').querySelector('li').cloneNode(true);
@@ -221,29 +214,11 @@ var renderPopupCard = function (advert) {
     return mapCardPhoto;
   };
   renderMapCardPhoto();
-
   return mapCard;
 };
 
-
-// функция для события "Клик метки по похожему объявлению"
-var someHandler = function (evt) {
-
-  for (i = 0; i < adverts.length; i++) {
-    var x = adverts[i];
-    var y = evt.target.parentNode;
-    var xxx = x.location.x;
-    var yyy = y.offsetLeft + 'px';
-
-    if (xxx === yyy) {
-      fragmentPopupCard.appendChild(renderPopupCard(adverts[i]));
-      mainMap.appendChild(fragmentPopupCard);
-    }
-  }
-};
-
 // функция для события "Клик по главной метке"
-var mainPinClickHandler = function () {
+mainPin.addEventListener('mouseup', function () {
   mainMap.classList.remove('map--faded');
   formNotice.classList.remove('notice__form--disabled');
   mapPins.appendChild(fragmentMapPin);
@@ -251,15 +226,5 @@ var mainPinClickHandler = function () {
   for (i = 0; i < fieldsets.length; i++) {
     fieldsets[i].disabled = false;
   }
-
-  var imgPin = mapPins.querySelectorAll('img');
-  for (i = 0; i < imgPin.length; i++) {
-    if (!imgPin[i].parentNode.classList.contains('map__pin--main')) {
-
-      imgPin[i].addEventListener('click', someHandler);
-    }
-  }
-};
-
-mainPin.addEventListener('mouseup', mainPinClickHandler);
+});
 
