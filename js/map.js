@@ -278,16 +278,16 @@ mainPin.addEventListener('mouseup', function () {
     var option = numGuests.querySelectorAll('option');
 
     if (numRooms.value === '1') {
-      option[0].disabled = false;
+      option[0].disabled = true;
       option[1].disabled = true;
-      option[2].disabled = true;
+      option[2].disabled = false;
       option[3].disabled = true;
       numGuests.value = '1';
     }
     if (numRooms.value === '2') {
       option[0].disabled = false;
       option[1].disabled = false;
-      option[2].disabled = true;
+      option[2].disabled = false;
       option[3].disabled = true;
       numGuests.value = '2';
     }
