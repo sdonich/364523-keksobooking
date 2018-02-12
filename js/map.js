@@ -273,37 +273,37 @@ mainPin.addEventListener('mouseup', function () {
     }
   };
   document.querySelector('#room_number').onchange = function () {
-    var x = document.querySelector('#room_number');
-    var y = document.querySelector('#capacity');
-    var option = y.querySelectorAll('option');
+    var numRooms = document.querySelector('#room_number');
+    var numGuests = document.querySelector('#capacity');
+    var option = numGuests.querySelectorAll('option');
 
-    if (x.value === '1') {
+    if (numRooms.value === '1') {
       option[0].disabled = false;
       option[1].disabled = true;
       option[2].disabled = true;
       option[3].disabled = true;
-      y.value = '1';
+      numGuests.value = '1';
     }
-    if (x.value === '2') {
+    if (numRooms.value === '2') {
       option[0].disabled = false;
       option[1].disabled = false;
       option[2].disabled = true;
       option[3].disabled = true;
-      y.value = '2';
+      numGuests.value = '2';
     }
-    if (x.value === '3') {
+    if (numRooms.value === '3') {
       option[0].disabled = false;
       option[1].disabled = false;
       option[2].disabled = false;
       option[3].disabled = true;
-      y.value = '3';
+      numGuests.value = '3';
     }
-    if (x.value === '100') {
+    if (numRooms.value === '100') {
       option[0].disabled = true;
       option[1].disabled = true;
       option[2].disabled = true;
       option[3].disabled = false;
-      y.value = '0';
+      numGuests.value = '0';
     }
   };
 
