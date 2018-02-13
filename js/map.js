@@ -26,14 +26,6 @@ mainPinAdress.value = mainCoordinateX + ', ' + mainCoordinateY;
 var fragmentMapPin = document.createDocumentFragment();
 var fragmentPopupCard = document.createDocumentFragment();
 
-// отключение формы до активации карты
-var disableForm = function () {
-  for (var i = 0; i < fieldsets.length; i++) {
-    fieldsets[i].disabled = true;
-  }
-  return fieldsets;
-};
-disableForm();
 
 // функция для рандома
 var random = function (min, max) {
@@ -241,71 +233,5 @@ mainPin.addEventListener('mouseup', function () {
   for (var i = 0; i < fieldsets.length; i++) {
     fieldsets[i].disabled = false;
   }
-  // валидация
-  document.querySelector('#timein').onchange = function () {
-    var changeTimeCheckin = document.querySelector('#timeout');
-    changeTimeCheckin.value = this.value;
-  };
-  document.querySelector('#timeout').onchange = function () {
-    var changeTimeCheckin = document.querySelector('#timein');
-    changeTimeCheckin.value = this.value;
-  };
-  document.querySelector('#type').onchange = function () {
-    var changeType = document.querySelector('#type');
-    var minPrice = document.querySelector('#price');
-
-    if (changeType.value === 'flat') {
-      changeType.min = '0';
-      minPrice.placeholder = '5000';
-    }
-    if (changeType.value === 'bungalo') {
-      changeType.min = '1000';
-      changeType.placeholder = '1000';
-      minPrice.placeholder = '5000';
-    }
-    if (changeType.value === 'house') {
-      changeType.min = '5000';
-      minPrice.placeholder = '5000';
-    }
-    if (changeType.value === 'palace') {
-      changeType.min = '10000';
-      minPrice.placeholder = '10000';
-    }
-  };
-  document.querySelector('#room_number').onchange = function () {
-    var numRooms = document.querySelector('#room_number');
-    var numGuests = document.querySelector('#capacity');
-    var option = numGuests.querySelectorAll('option');
-
-    if (numRooms.value === '1') {
-      option[0].disabled = true;
-      option[1].disabled = true;
-      option[2].disabled = false;
-      option[3].disabled = true;
-      numGuests.value = '1';
-    }
-    if (numRooms.value === '2') {
-      option[0].disabled = false;
-      option[1].disabled = false;
-      option[2].disabled = false;
-      option[3].disabled = true;
-      numGuests.value = '2';
-    }
-    if (numRooms.value === '3') {
-      option[0].disabled = false;
-      option[1].disabled = false;
-      option[2].disabled = false;
-      option[3].disabled = true;
-      numGuests.value = '3';
-    }
-    if (numRooms.value === '100') {
-      option[0].disabled = true;
-      option[1].disabled = true;
-      option[2].disabled = true;
-      option[3].disabled = false;
-      numGuests.value = '0';
-    }
-  };
-
 });
 
