@@ -1,6 +1,6 @@
 'use strict';
 
-(function () {
+(function (global) {
   (function () {
     var formNotice = document.querySelector('.notice__form');
     var fieldsets = formNotice.querySelectorAll('fieldset');
@@ -10,6 +10,15 @@
       }
     })();
   })();
+
+  var formNotice = document.querySelector('.notice__form');
+  var fieldsets = formNotice.querySelectorAll('fieldset');
+
+  global.enableForm = function () {
+    for (var i = 0; i < fieldsets.length; i++) {
+      fieldsets[i].disabled = false;
+    }
+  };
 
   document.querySelector('#timein').addEventListener('change', function (evt) {
     var changeTimeCheckin = document.querySelector('#timeout');
@@ -76,4 +85,4 @@
       numGuests.value = '0';
     }
   });
-})();
+})(window);
