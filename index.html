@@ -93,7 +93,7 @@
             <div class="notice__preview">
               <img src="img/muffin.png" alt="Аватар пользователя"  width="40" height="44">
             </div>
-            <input type="file" id="avatar" required>
+            <input type="file" id="avatar">
             <label class="drop-zone" for="avatar">Загрузите или&nbsp;перетащите сюда фото</label>
             <p class="notice__info">Заполните все обязательные поля, назначьте цену, загрузите фотографии. Придумайте интересное описание. Оно сделает объявление более живым и привлекательным. Получившееся объявление должно давать гостям полное представление о вашем жилье.</p>
           </div>
@@ -102,7 +102,7 @@
 
       <fieldset class="form__element form__element--wide">
         <label for="title">Заголовок объявления</label>
-        <input id="title" name="title" type="text" min="30" max="100" placeholder="Милая, уютная квартирка в центре Токио" required>
+        <input id="title" name="title" type="text" minlength="30" maxlength="100" placeholder="Милая, уютная квартирка в центре Токио" required>
       </fieldset>
 
       <fieldset class="form__element form__element--wide">
@@ -122,7 +122,7 @@
 
       <fieldset class="form__element">
         <label for="price">Цена за ночь, руб.</label>
-        <input id="price" name="price" min="0" max="1000000" type="number" placeholder="5000" required>
+        <input id="price" name="price" min="1000" max="1000000" type="number" placeholder="5000" required>
       </fieldset>
 
       <fieldset class="form__element">
@@ -245,7 +245,13 @@
   <button style="left: 200px; top: 400px;" class="map__pin"><img src="img/avatars/user07.png" width="40" height="40" draggable="false"></button>
 </template>
 
+<script src="js/set_form.js"></script>
+
+<script src="js/notice.js"></script>
+
 <script src="js/form.js"></script>
+
+<script src="js/backend.js"></script>
 
 <script src="js/data.js"></script>
 

@@ -1,24 +1,19 @@
 'use strict';
 
-(function (global) {
-  (function () {
-    var formNotice = document.querySelector('.notice__form');
-    var fieldsets = formNotice.querySelectorAll('fieldset');
-    (function () {
-      for (var i = 0; i < fieldsets.length; i++) {
-        fieldsets[i].disabled = true;
-      }
-    })();
-  })();
-
+(function () {
   var formNotice = document.querySelector('.notice__form');
-  var fieldsets = formNotice.querySelectorAll('fieldset');
 
-  global.enableForm = function () {
-    for (var i = 0; i < fieldsets.length; i++) {
-      fieldsets[i].disabled = false;
-    }
-  };
+  window.setFormState(true);
+
+  formNotice.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+
+    window.backend.save(new FormData(formNotice), function () {
+      window.notice.succes();
+      formNotice.reset();
+    },
+    window.notice.error);
+  });
 
   document.querySelector('#timein').addEventListener('change', function (evt) {
     var changeTimeCheckin = document.querySelector('#timeout');
@@ -31,24 +26,22 @@
   });
 
   document.querySelector('#type').addEventListener('change', function (evt) {
-    var changeType = document.querySelector('#type');
     var minPrice = document.querySelector('#price');
 
     if (evt.target.value === 'flat') {
-      changeType.min = '0';
+      minPrice.min = '1000';
       minPrice.placeholder = '5000';
     }
     if (evt.target.value === 'bungalo') {
-      changeType.min = '1000';
-      changeType.placeholder = '1000';
+      minPrice.min = '0';
       minPrice.placeholder = '5000';
     }
     if (evt.target.value === 'house') {
-      changeType.min = '5000';
+      minPrice.min = '5000';
       minPrice.placeholder = '5000';
     }
     if (evt.target.value === 'palace') {
-      changeType.min = '10000';
+      minPrice.min = '10000';
       minPrice.placeholder = '10000';
     }
   });
@@ -85,4 +78,4 @@
       numGuests.value = '0';
     }
   });
-})(window);
+})();
