@@ -8,10 +8,12 @@
     document.body.appendChild(note);
     note.classList.add('descript-notice');
 
-    if (error) {
-      note.textContent = error;
+    if (error.code === 0 || !error.code) {
+      note.textContent = 'Произошла ошибка соединения с сервером. Проверьте интернет-соединение';
+    } else if (error.code === 400) {
+      note.textContent = 'Ошибка ' + error.code + '. ' + 'Ваши данные не соответсвуют требованиям';
     } else {
-      note.textContent = 'Ошибка отправки формы. Проверьте интернет-соединение';
+      note.textContent = 'Oops! Произошла ошибка: ' + error.code;
     }
 
     setTimeout(function () {

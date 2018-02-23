@@ -60,7 +60,6 @@
 
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
-      window.createMapPins();
 
       getFormCoords();
       document.removeEventListener('mousemove', onMouseMove);
@@ -70,5 +69,14 @@
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
+
+  var dataPins = function (evt) {
+    evt.preventDefault();
+
+    window.createMapPins();
+    mainPin.removeEventListener('click', dataPins);
+  };
+
+  mainPin.addEventListener('click', dataPins);
 })();
 

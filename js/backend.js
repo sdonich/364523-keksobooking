@@ -11,7 +11,9 @@
 
       xhr.addEventListener('load', function () {
         if (xhr.status !== 200) {
-          var error = 'Oops! Произошла ошибка: ' + xhr.status;
+          var error = {
+            code: xhr.status
+          };
           onError(error);
         } else {
           onLoad();
@@ -19,7 +21,7 @@
       });
 
       xhr.addEventListener('error', function () {
-        onError();
+        onError(xhr.status);
       });
 
       xhr.open('POST', URL);
@@ -30,9 +32,11 @@
       xhr.responseType = 'json';
 
       xhr.addEventListener('load', function () {
+        var error = {
+          code: xhr.status
+        };
 
         if (xhr.status !== 200) {
-          var error = 'Oops! Произошла ошибка: ' + xhr.status;
           onError(error);
         } else {
           onLoad(xhr.response);
@@ -40,15 +44,13 @@
       });
 
       xhr.addEventListener('error', function () {
-        onError('Произошла ошибка соединения c сервером');
+        onError(xhr.status);
       });
-      xhr.addEventListener('timeout', function () {
-        onError('Запрос не смог выполниться за ' + xhr.timeout + ' cек.');
-      });
-      xhr.timeout = 10000;
 
       xhr.open('GET', URL_DATA);
       xhr.send();
     }
   };
+
+
 })(window);
