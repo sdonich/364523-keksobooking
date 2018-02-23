@@ -856,17 +856,18 @@ textarea:focus
 }
 
 .descript-notice {
+  font-family: Roboto, sans-serif;
+  font-size: 22px;
+  font-weight: bold;
   position: fixed;
-  font-size: 15px;
-  color: black;
-  width: 320px;
-  height: 50px;
-  top: 5%;
+  color: #353535;
+  width: 300px;
+  top: 50%;
   transform: translateX(-50%);
   left: 50%;
   z-index: 4;
-  padding-right: auto;
-  padding-top: 15px;
+  padding: 20px 20px 20px 20px;
+  border: 4px solid #fa9;
   text-align: center;
   background-color: rgba(255, 255, 255, 1);
   box-shadow: 12px 12px 5px rgba(0, 0, 0, 0.5);

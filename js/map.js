@@ -30,7 +30,6 @@
     evt.preventDefault();
 
     mainMap.classList.remove('map--faded');
-    window.createMapPins();
     formNotice.classList.remove('notice__form--disabled');
     window.setFormState(false);
 
@@ -61,7 +60,7 @@
 
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
-
+      window.createMapPins();
 
       getFormCoords();
       document.removeEventListener('mousemove', onMouseMove);
