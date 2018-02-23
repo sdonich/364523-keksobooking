@@ -1,8 +1,8 @@
 'use strict';
 
 (function (global) {
-  var PHOTO_WIDTH = '70px';
-  var PHOTO_HEIGHT = '70px';
+  var PHOTO_WIDTH = '40px';
+  var PHOTO_HEIGHT = '40px';
 
   var mainMap = document.querySelector('.map');
   var popupCardTemplate = document.querySelector('template').content.querySelector('.map__card');
@@ -10,17 +10,20 @@
   var fragmentPopupCard = document.createDocumentFragment();
 
   var renderPopupCard = function (advert) {
-
     while (mapCard.querySelector('.popup__pictures').lastChild) {
       mapCard.querySelector('.popup__pictures').removeChild(mapCard.querySelector('.popup__pictures').lastChild);
     }
+    while (mapCard.querySelector('.popup__features').lastChild) {
+      mapCard.querySelector('.popup__features').removeChild(mapCard.querySelector('.popup__features').lastChild);
+    }
 
     var specification = mapCard.querySelectorAll('p');
-    mapCard.querySelector('img').src = advert.author;
+    mapCard.querySelector('img').src = advert.author.avatar;
     mapCard.querySelector('h3').textContent = advert.offer.title;
     specification[0].querySelector('small').textContent = advert.offer.address;
-    specification[1].textContent = advert.offer.price;
+    specification[1].textContent = advert.offer.price + '\u20BD/ночь';
     mapCard.querySelector('h4').textContent = advert.offer.type;
+
     var amountRooms = ' комнаты';
     if (advert.offer.rooms === 1) {
       amountRooms = ' комната';
@@ -30,11 +33,39 @@
       amountGuests = ' гостя';
     }
     specification[2].textContent = advert.offer.rooms + amountRooms + ' для ' + advert.offer.guests + amountGuests;
-    specification[3].textContent = 'Заезд после ' + advert.offer.chekin + ', выезд до ' + advert.offer.chekout;
+    specification[3].textContent = 'Заезд после ' + advert.offer.checkin + ', выезд до ' + advert.offer.checkout;
+    renderFeatures(advert);
     specification[4].textContent = advert.offer.description;
     mapCard.appendChild(renderMapCardPhoto(advert));
 
     return mapCard;
+  };
+
+  var renderFeatures = function (advert) {
+    var featuresCard = popupCardTemplate.querySelector('.popup__features').cloneNode(true);
+    var features = featuresCard.querySelectorAll('li');
+    for (var i = 0; i < advert.offer.features.length; i++) {
+      switch (advert.offer.features[i]) {
+        case 'wifi':
+          mapCard.querySelector('.popup__features').appendChild(features[0]);
+          break;
+        case 'dishwasher':
+          mapCard.querySelector('.popup__features').appendChild(features[1]);
+          break;
+        case 'parking':
+          mapCard.querySelector('.popup__features').appendChild(features[2]);
+          break;
+        case 'washer':
+          mapCard.querySelector('.popup__features').appendChild(features[3]);
+          break;
+        case 'elevator':
+          mapCard.querySelector('.popup__features').appendChild(features[4]);
+          break;
+        case 'conditioner':
+          mapCard.querySelector('.popup__features').appendChild(features[5]);
+          break;
+      }
+    }
   };
 
   var renderMapCardPhoto = function (advert) {

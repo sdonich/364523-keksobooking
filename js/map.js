@@ -6,7 +6,6 @@
   var HORIZON = 150;
 
   var mainMap = document.querySelector('.map');
-  var mapPins = document.querySelector('.map__pins');
   var mainPin = mainMap.querySelector('.map__pin--main');
   var mainCoordinateX = mainPin.offsetLeft + MAIN_PIN_RADIUS;
   var mainCoordinateY = mainPin.offsetTop + MAIN_PIN_RADIUS;
@@ -29,6 +28,11 @@
 
   mainPin.querySelector('img').addEventListener('mousedown', function (evt) {
     evt.preventDefault();
+
+    mainMap.classList.remove('map--faded');
+    formNotice.classList.remove('notice__form--disabled');
+    window.setFormState(false);
+
     var startCoords = {
       x: evt.target.parentElement.clientX,
       y: evt.target.parentElement.clientY
@@ -56,12 +60,6 @@
 
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
-      mainMap.classList.remove('map--faded');
-      formNotice.classList.remove('notice__form--disabled');
-
-      var pinsFragment = window.createMapPins();
-      mapPins.appendChild(pinsFragment);
-      window.enableForm();
 
       getFormCoords();
       document.removeEventListener('mousemove', onMouseMove);
@@ -71,5 +69,14 @@
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
+
+  var dataPins = function (evt) {
+    evt.preventDefault();
+
+    window.createMapPins();
+    mainPin.removeEventListener('click', dataPins);
+  };
+
+  mainPin.addEventListener('click', dataPins);
 })();
 
