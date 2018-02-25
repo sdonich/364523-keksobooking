@@ -22,7 +22,22 @@
     mapCard.querySelector('h3').textContent = advert.offer.title;
     specification[0].querySelector('small').textContent = advert.offer.address;
     specification[1].textContent = advert.offer.price + '\u20BD/ночь';
-    mapCard.querySelector('h4').textContent = advert.offer.type;
+
+    switch (advert.offer.type) {
+      case 'flat':
+        mapCard.querySelector('h4').textContent = 'Квартира';
+        break;
+      case 'house':
+        mapCard.querySelector('h4').textContent = 'Дом';
+        break;
+      case 'bungalo':
+        mapCard.querySelector('h4').textContent = 'Лачуга';
+        break;
+      case 'palace':
+        mapCard.querySelector('h4').textContent = 'Дворец';
+        break;
+
+    }
 
     var amountRooms = ' комнаты';
     if (advert.offer.rooms === 1) {
