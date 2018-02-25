@@ -13,7 +13,15 @@
   var filterType = document.querySelector('#housing-type');
 
   global.useFilter = function (adverts) {
-    var data = adverts;
+    return adverts.filter(function(ad) {
+      var features = ad.offer.features;
+
+      var wifi = filterWifi.checked && features.indexOf('wifi') > -1;
+      var dw = filterDishwasher.checked && features.indexOf('dishwasher') > -1;
+      // ...
+
+      return wifi || dw; // || anotherFilter;
+    });
 
     if (filterWifi.checked) {
       data = data.filter(function (advert) {
