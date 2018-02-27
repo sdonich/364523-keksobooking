@@ -1,6 +1,7 @@
 'use strict';
 
 (function (global) {
+
   var filterWifi = document.querySelector('#filter-wifi');
   var filterDishwasher = document.querySelector('#filter-dishwasher');
   var filterParking = document.querySelector('#filter-parking');
