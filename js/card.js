@@ -8,6 +8,7 @@
   var popupCardTemplate = document.querySelector('template').content.querySelector('.map__card');
   var mapCard = popupCardTemplate.cloneNode(true);
   var fragmentPopupCard = document.createDocumentFragment();
+  var crossCloseButton = mapCard.querySelector('.popup__close');
 
   var renderPopupCard = function (advert) {
     while (mapCard.querySelector('.popup__pictures').lastChild) {
@@ -36,7 +37,6 @@
       case 'palace':
         mapCard.querySelector('h4').textContent = 'Дворец';
         break;
-
     }
 
     var amountRooms = ' комнаты';
@@ -93,16 +93,42 @@
       cardPhoto.querySelector('img').src = photo;
       return cardPhoto;
     };
-    for (var j = 0; j < advert.offer.photos.length; j++) {
-      mapCardPhoto.appendChild(addMapCardPhoto(advert.offer.photos[j]));
+    for (var i = 0; i < advert.offer.photos.length; i++) {
+      mapCardPhoto.appendChild(addMapCardPhoto(advert.offer.photos[i]));
     }
     return mapCardPhoto;
   };
 
+  var closePopup = function () {
+    document.querySelector('.popup').remove();
+    document.removeEventListener('keydown', onPopupEscPress);
+  };
+
+  var onPopupEscPress = function (evt) {
+    window.util.isEscEvent(evt, closePopup);
+  };
+  var onPopupEnterPress = function (evt) {
+    window.util.isEnterEvent(evt, closePopup);
+  };
+
+  var renderPopup = function (data) {
+    fragmentPopupCard.appendChild(renderPopupCard(data));
+    mainMap.appendChild(fragmentPopupCard);
+
+    crossCloseButton.addEventListener('click', closePopup);
+    crossCloseButton.addEventListener('keydown', onPopupEnterPress);
+    document.addEventListener('keydown', onPopupEscPress);
+  };
+
   global.setupPinHandler = function (pin, data) {
     pin.querySelector('img').addEventListener('click', function () {
-      fragmentPopupCard.appendChild(renderPopupCard(data));
-      mainMap.appendChild(fragmentPopupCard);
+      renderPopup(data);
+    });
+
+    pin.addEventListener('keydown', function (evt) {
+      window.util.isEnterEvent(evt, function () {
+        renderPopup(data);
+      });
     });
   };
 })(window);

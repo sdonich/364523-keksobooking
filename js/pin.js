@@ -53,4 +53,31 @@
     },
     window.notice.error);
   };
+
+  var features = formContainer.querySelectorAll('input[type=checkbox]');
+  for (var i = 0; i < features.length; i++) {
+    features[i].addEventListener('focus', function (evt) {
+      evt.target.nextElementSibling.style.boxShadow = '0 0 4px 1px #ff6547';
+    });
+    features[i].addEventListener('blur', function (evt) {
+      evt.target.nextElementSibling.style.boxShadow = '';
+    });
+
+    features[i].addEventListener('keydown', function (evt) {
+      window.util.isEnterEvent(evt, function () {
+        if (evt.target.checked === false) {
+          evt.target.checked = true;
+          cleanMapPins();
+          removePopup();
+          window.debounce(global.createMapPins);
+
+        } else {
+          evt.target.checked = false;
+          cleanMapPins();
+          removePopup();
+          window.debounce(global.createMapPins);
+        }
+      });
+    });
+  }
 })(window);

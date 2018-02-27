@@ -78,4 +78,28 @@
       numGuests.value = '0';
     }
   });
+
+  var formFeatures = formNotice.querySelectorAll('input[type=checkbox]');
+  for (var i = 0; i < formFeatures.length; i++) {
+
+    formFeatures[i].addEventListener('focus', function (evt) {
+      evt.target.nextElementSibling.style.boxShadow = '0 0 4px 1px #ff6547';
+    });
+
+    formFeatures[i].addEventListener('blur', function (evt) {
+      evt.target.nextElementSibling.style.boxShadow = '';
+    });
+
+    formFeatures[i].addEventListener('keydown', function (evt) {
+      window.util.isEnterEvent(evt, function () {
+        evt.preventDefault();
+
+        if (evt.target.checked === false) {
+          evt.target.checked = true;
+        } else {
+          evt.target.checked = false;
+        }
+      });
+    });
+  }
 })();
