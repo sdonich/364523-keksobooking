@@ -93,8 +93,8 @@
       cardPhoto.querySelector('img').src = photo;
       return cardPhoto;
     };
-    for (var i = 0; i < advert.offer.photos.length; i++) {
-      mapCardPhoto.appendChild(addMapCardPhoto(advert.offer.photos[i]));
+    for (var j = 0; j < advert.offer.photos.length; j++) {
+      mapCardPhoto.appendChild(addMapCardPhoto(advert.offer.photos[j]));
     }
     return mapCardPhoto;
   };
