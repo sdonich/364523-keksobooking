@@ -33,9 +33,22 @@
     }, 2000);
   };
 
+  var getEmptyData = function () {
+    var note = document.createElement('div');
+
+    document.body.appendChild(note);
+    note.classList.add('descript-notice');
+    note.textContent = 'Ваши данные успешно отправлены';
+
+    setTimeout(function () {
+      note.remove();
+    }, 2000);
+  };
+
   global.notice = {
     error: getError,
-    succes: getSucces
+    succes: getSucces,
+    empty: getEmptyData
   };
 
 })(window);

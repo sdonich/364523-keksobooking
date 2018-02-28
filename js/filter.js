@@ -109,7 +109,8 @@
         return advert.offer.type === 'bungalo';
       });
     }
-    return data;
+
+    return data || global.notice.empty;
   };
 })(window);
 
