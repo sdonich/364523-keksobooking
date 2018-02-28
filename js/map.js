@@ -1,6 +1,6 @@
 'use strict';
 
-(function () {
+(function (global) {
   var MAIN_PIN_RADIUS = 31;
   var NEEDLE = 22;
   var HORIZON = 150;
@@ -26,7 +26,8 @@
     mainPinAdress.value = mainCoordinateX + ', ' + mainCoordinateY;
   };
 
-  mainPin.querySelector('img').addEventListener('mousedown', function (evt) {
+
+  global.setupMainPinHandler = function (evt) {
     evt.preventDefault();
 
     mainMap.classList.remove('map--faded');
@@ -57,7 +58,6 @@
       }
       getFormCoords();
     };
-
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
 
@@ -68,7 +68,8 @@
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
-  });
+  };
+  mainPin.querySelector('img').addEventListener('mousedown', window.setupMainPinHandler);
 
   var dataPins = function (evt) {
     evt.preventDefault();
@@ -78,5 +79,5 @@
   };
 
   mainPin.addEventListener('click', dataPins);
-})();
+})(window);
 

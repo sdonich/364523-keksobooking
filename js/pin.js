@@ -7,24 +7,12 @@
   var fragmentMapPin = document.createDocumentFragment();
   var similaradvertsTemplate = document.querySelector('template').content.querySelector('.map__pin');
 
-  var cleanMapPins = function () {
-    while (mapPins.children[2]) {
-      mapPins.removeChild(mapPins.children[2]);
-    }
-  };
-
   var formContainer = document.querySelector('.map__filters');
   formContainer.addEventListener('change', function () {
-    cleanMapPins();
-    removePopup();
+    window.remove.mapPins();
+    window.remove.popup();
     window.debounce(global.createMapPins);
   });
-
-  var removePopup = function () {
-    if (document.querySelector('.popup')) {
-      document.querySelector('.popup').remove();
-    }
-  };
 
   var renderMapPin = function (pin) {
     var mapPin = similaradvertsTemplate.cloneNode(true);
@@ -67,14 +55,14 @@
       window.util.isEnterEvent(evt, function () {
         if (evt.target.checked === false) {
           evt.target.checked = true;
-          cleanMapPins();
-          removePopup();
+          window.remove.mapPins();
+          window.remove.popup();
           window.debounce(global.createMapPins);
 
         } else {
           evt.target.checked = false;
-          cleanMapPins();
-          removePopup();
+          window.remove.mapPins();
+          window.remove.popup();
           window.debounce(global.createMapPins);
         }
       });

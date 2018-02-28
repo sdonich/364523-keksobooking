@@ -1,9 +1,20 @@
 'use strict';
 
 (function () {
+
+  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+
   var formNotice = document.querySelector('.notice__form');
+  var mainMap = document.querySelector('.map');
+  var mainPin = mainMap.querySelector('.map__pin--main');
 
   window.setFormState(true);
+
+  var dataPins = function (evt) {
+    evt.preventDefault();
+    window.createMapPins();
+    mainPin.removeEventListener('click', dataPins);
+  };
 
   formNotice.addEventListener('submit', function (evt) {
     evt.preventDefault();
@@ -11,6 +22,16 @@
     window.backend.save(new FormData(formNotice), function () {
       window.notice.succes();
       formNotice.reset();
+
+      document.querySelector('.map__filters').reset();
+      window.remove.mapPins();
+      window.remove.popup();
+      mainMap.classList.add('map--faded');
+      formNotice.classList.add('notice__form--disabled');
+
+      mainPin.querySelector('img').addEventListener('mousedown', window.setupMainPinHandler);
+      mainPin.addEventListener('click', dataPins);
+
     },
     window.notice.error);
   });
@@ -102,4 +123,46 @@
       });
     });
   }
+
+  var fileChooser = document.querySelector('#images');
+  var photoPreview = fileChooser.nextElementSibling;
+
+  fileChooser.addEventListener('change', function () {
+    var file = fileChooser.files[0];
+    var fileName = file.name.toLowerCase();
+
+    var matches = FILE_TYPES.some(function (it) {
+      return fileName.endsWith(it);
+    });
+
+    if (matches) {
+      var reader = new FileReader();
+
+      reader.addEventListener('load', function () {
+        photoPreview.style.backgroundImage = 'url(' + reader.result + ')';
+      });
+      reader.readAsDataURL(file);
+    }
+  });
+
+  var fileChooserAvatar = document.querySelector('#avatar');
+  var avatarPreview = document.querySelector('.notice__preview img');
+
+  fileChooserAvatar.addEventListener('change', function () {
+    var file = fileChooserAvatar.files[0];
+    var fileName = file.name.toLowerCase();
+
+    var matches = FILE_TYPES.some(function (it) {
+      return fileName.endsWith(it);
+    });
+
+    if (matches) {
+      var reader = new FileReader();
+
+      reader.addEventListener('load', function () {
+        avatarPreview.src = reader.result;
+      });
+      reader.readAsDataURL(file);
+    }
+  });
 })();
