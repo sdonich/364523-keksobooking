@@ -10,7 +10,7 @@
   var mapFilter = mainMap.querySelector('.map__filters-container');
   var formNotice = document.querySelector('.notice__form');
 
-  window.getStartCoords();
+  window.getCoords.start();
 
   var rightMapBorder = mainMap.clientWidth - MAIN_PIN_RADIUS;
   var leftMapBorder = MAIN_PIN_RADIUS;
@@ -46,12 +46,12 @@
       if (mainPin.offsetLeft - shift.x > leftMapBorder && mainPin.offsetLeft - shift.x < rightMapBorder) {
         mainPin.style.left = mainPin.offsetLeft - shift.x + 'px';
       }
-      window.getFormCoords();
+      window.getCoords.form();
     };
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
 
-      window.getFormCoords();
+      window.getCoords.form();
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
     };
