@@ -4,17 +4,17 @@
   var MAIN_PIN_RADIUS = 31;
   var NEEDLE = 22;
   var HORIZON = 150;
+  var BOTTOM_HORIZON = 500;
 
   var mainMap = document.querySelector('.map');
   var mainPin = mainMap.querySelector('.map__pin--main');
-  var mapFilter = mainMap.querySelector('.map__filters-container');
   var formNotice = document.querySelector('.notice__form');
 
   window.getCoords.start();
 
   var rightMapBorder = mainMap.clientWidth - MAIN_PIN_RADIUS;
   var leftMapBorder = MAIN_PIN_RADIUS;
-  var bottomMapBorder = mainMap.clientHeight - MAIN_PIN_RADIUS - NEEDLE - mapFilter.clientHeight;
+  var bottomMapBorder = BOTTOM_HORIZON - MAIN_PIN_RADIUS - NEEDLE;
   var topMapBorder = HORIZON - MAIN_PIN_RADIUS;
 
   global.setupMainPinHandler = function (evt) {
@@ -59,15 +59,7 @@
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   };
-  mainPin.querySelector('img').addEventListener('mousedown', window.setupMainPinHandler);
-
-  var dataPins = function (evt) {
-    evt.preventDefault();
-
-    window.createMapPins();
-    mainPin.removeEventListener('click', dataPins);
-  };
-
-  mainPin.addEventListener('click', dataPins);
+  mainPin.addEventListener('mousedown', window.setupMainPinHandler);
+  mainPin.addEventListener('click', window.loadDataPinHandler);
 })(window);
 

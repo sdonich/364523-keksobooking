@@ -5,37 +5,37 @@
   var PHOTO_HEIGHT = '40px';
 
   var mainMap = document.querySelector('.map');
-  var popupCardTemplate = document.querySelector('template').content.querySelector('.map__card');
-  var mapCard = popupCardTemplate.cloneNode(true);
-  var fragmentPopupCard = document.createDocumentFragment();
-  var crossCloseButton = mapCard.querySelector('.popup__close');
+  var popupTemplate = document.querySelector('template').content.querySelector('.map__card');
+  var popup = popupTemplate.cloneNode(true);
+  var fragmentPopup = document.createDocumentFragment();
+  var crossCloseButton = popup.querySelector('.popup__close');
 
-  var renderPopupCard = function (advert) {
-    while (mapCard.querySelector('.popup__pictures').lastChild) {
-      mapCard.querySelector('.popup__pictures').removeChild(mapCard.querySelector('.popup__pictures').lastChild);
+  var getPopup = function (advert) {
+    while (popup.querySelector('.popup__pictures').lastChild) {
+      popup.querySelector('.popup__pictures').removeChild(popup.querySelector('.popup__pictures').lastChild);
     }
-    while (mapCard.querySelector('.popup__features').lastChild) {
-      mapCard.querySelector('.popup__features').removeChild(mapCard.querySelector('.popup__features').lastChild);
+    while (popup.querySelector('.popup__features').lastChild) {
+      popup.querySelector('.popup__features').removeChild(popup.querySelector('.popup__features').lastChild);
     }
 
-    var specification = mapCard.querySelectorAll('p');
-    mapCard.querySelector('img').src = advert.author.avatar;
-    mapCard.querySelector('h3').textContent = advert.offer.title;
+    var specification = popup.querySelectorAll('p');
+    popup.querySelector('img').src = advert.author.avatar;
+    popup.querySelector('h3').textContent = advert.offer.title;
     specification[0].querySelector('small').textContent = advert.offer.address;
     specification[1].textContent = advert.offer.price + '\u20BD/ночь';
 
     switch (advert.offer.type) {
       case 'flat':
-        mapCard.querySelector('h4').textContent = 'Квартира';
+        popup.querySelector('h4').textContent = 'Квартира';
         break;
       case 'house':
-        mapCard.querySelector('h4').textContent = 'Дом';
+        popup.querySelector('h4').textContent = 'Дом';
         break;
       case 'bungalo':
-        mapCard.querySelector('h4').textContent = 'Лачуга';
+        popup.querySelector('h4').textContent = 'Лачуга';
         break;
       case 'palace':
-        mapCard.querySelector('h4').textContent = 'Дворец';
+        popup.querySelector('h4').textContent = 'Дворец';
         break;
     }
 
@@ -49,54 +49,54 @@
     }
     specification[2].textContent = advert.offer.rooms + amountRooms + ' для ' + advert.offer.guests + amountGuests;
     specification[3].textContent = 'Заезд после ' + advert.offer.checkin + ', выезд до ' + advert.offer.checkout;
-    renderFeatures(advert);
+    getFeatures(advert);
     specification[4].textContent = advert.offer.description;
-    mapCard.appendChild(renderMapCardPhoto(advert));
+    popup.appendChild(getPopupPhoto(advert));
 
-    return mapCard;
+    return popup;
   };
 
-  var renderFeatures = function (advert) {
-    var featuresCard = popupCardTemplate.querySelector('.popup__features').cloneNode(true);
+  var getFeatures = function (advert) {
+    var featuresCard = popupTemplate.querySelector('.popup__features').cloneNode(true);
     var features = featuresCard.querySelectorAll('li');
     for (var i = 0; i < advert.offer.features.length; i++) {
       switch (advert.offer.features[i]) {
         case 'wifi':
-          mapCard.querySelector('.popup__features').appendChild(features[0]);
+          popup.querySelector('.popup__features').appendChild(features[0]);
           break;
         case 'dishwasher':
-          mapCard.querySelector('.popup__features').appendChild(features[1]);
+          popup.querySelector('.popup__features').appendChild(features[1]);
           break;
         case 'parking':
-          mapCard.querySelector('.popup__features').appendChild(features[2]);
+          popup.querySelector('.popup__features').appendChild(features[2]);
           break;
         case 'washer':
-          mapCard.querySelector('.popup__features').appendChild(features[3]);
+          popup.querySelector('.popup__features').appendChild(features[3]);
           break;
         case 'elevator':
-          mapCard.querySelector('.popup__features').appendChild(features[4]);
+          popup.querySelector('.popup__features').appendChild(features[4]);
           break;
         case 'conditioner':
-          mapCard.querySelector('.popup__features').appendChild(features[5]);
+          popup.querySelector('.popup__features').appendChild(features[5]);
           break;
       }
     }
   };
 
-  var renderMapCardPhoto = function (advert) {
-    var mapCardPhoto = mapCard.querySelector('.popup__pictures');
+  var getPopupPhoto = function (advert) {
+    var popupPhoto = popup.querySelector('.popup__pictures');
 
-    var addMapCardPhoto = function (photo) {
-      var cardPhoto = popupCardTemplate.querySelector('.popup__pictures').querySelector('li').cloneNode(true);
-      cardPhoto.querySelector('img').style.width = PHOTO_WIDTH;
-      cardPhoto.querySelector('img').style.height = PHOTO_HEIGHT;
-      cardPhoto.querySelector('img').src = photo;
-      return cardPhoto;
+    var addPopupPhoto = function (photo) {
+      var flatPhoto = popupTemplate.querySelector('.popup__pictures').querySelector('li').cloneNode(true);
+      flatPhoto.querySelector('img').style.width = PHOTO_WIDTH;
+      flatPhoto.querySelector('img').style.height = PHOTO_HEIGHT;
+      flatPhoto.querySelector('img').src = photo;
+      return flatPhoto;
     };
-    for (var j = 0; j < advert.offer.photos.length; j++) {
-      mapCardPhoto.appendChild(addMapCardPhoto(advert.offer.photos[j]));
+    for (var i = 0; i < advert.offer.photos.length; i++) {
+      popupPhoto.appendChild(addPopupPhoto(advert.offer.photos[i]));
     }
-    return mapCardPhoto;
+    return popupPhoto;
   };
 
   var closePopup = function () {
@@ -112,8 +112,8 @@
   };
 
   var renderPopup = function (data) {
-    fragmentPopupCard.appendChild(renderPopupCard(data));
-    mainMap.appendChild(fragmentPopupCard);
+    fragmentPopup.appendChild(getPopup(data));
+    mainMap.appendChild(fragmentPopup);
 
     crossCloseButton.addEventListener('click', closePopup);
     crossCloseButton.addEventListener('keydown', onPopupEnterPress);
@@ -121,7 +121,7 @@
   };
 
   global.setupPinHandler = function (pin, data) {
-    pin.querySelector('img').addEventListener('click', function () {
+    pin.addEventListener('click', function () {
       renderPopup(data);
     });
 

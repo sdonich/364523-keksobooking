@@ -1,19 +1,38 @@
 'use strict';
 
-(function () {
+(function (global) {
 
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+  var AVATAR_DEFAULT = 'img/muffin.png';
 
   var formNotice = document.querySelector('.notice__form');
   var mainMap = document.querySelector('.map');
   var mainPin = mainMap.querySelector('.map__pin--main');
+  var fileChooser = document.querySelector('#images');
+  var photoPreview = fileChooser.nextElementSibling;
+  var fileChooserAvatar = document.querySelector('#avatar');
+  var avatarPreview = document.querySelector('.notice__preview img');
 
   window.setFormState(true);
 
-  var dataPins = function (evt) {
+  global.loadDataPinHandler = function (evt) {
     evt.preventDefault();
     window.createMapPins();
-    mainPin.removeEventListener('click', dataPins);
+    mainPin.removeEventListener('click', window.loadDataPinHandler);
+  };
+
+  var resetSet = function () {
+    formNotice.reset();
+    document.querySelector('.map__filters').reset();
+    window.remove.mapPins();
+    window.remove.popup();
+    window.getCoords.start();
+    mainMap.classList.add('map--faded');
+    formNotice.classList.add('notice__form--disabled');
+    photoPreview.style.backgroundImage = '';
+    avatarPreview.src = AVATAR_DEFAULT;
+    mainPin.addEventListener('mousedown', window.setupMainPinHandler);
+    mainPin.addEventListener('click', window.loadDataPinHandler);
   };
 
   formNotice.addEventListener('submit', function (evt) {
@@ -21,20 +40,16 @@
 
     window.backend.save(new FormData(formNotice), function () {
       window.notice.succes();
-      formNotice.reset();
-
-      document.querySelector('.map__filters').reset();
-      window.remove.mapPins();
-      window.remove.popup();
-      window.getCoords.start();
-      mainMap.classList.add('map--faded');
-      formNotice.classList.add('notice__form--disabled');
-
-      mainPin.querySelector('img').addEventListener('mousedown', window.setupMainPinHandler);
-      mainPin.addEventListener('click', dataPins);
-
+      resetSet();
     },
     window.notice.error);
+  });
+
+  var resetButton = document.querySelector('.form__reset');
+  resetButton.addEventListener('click', function (evt) {
+    evt.preventDefault();
+    window.notice.reset();
+    resetSet();
   });
 
   document.querySelector('#timein').addEventListener('change', function (evt) {
@@ -67,6 +82,7 @@
       minPrice.placeholder = '10000';
     }
   });
+
   document.querySelector('#room_number').addEventListener('change', function (evt) {
     var numGuests = document.querySelector('#capacity');
     var option = numGuests.querySelectorAll('option');
@@ -125,9 +141,6 @@
     });
   }
 
-  var fileChooser = document.querySelector('#images');
-  var photoPreview = fileChooser.nextElementSibling;
-
   fileChooser.addEventListener('change', function () {
     var file = fileChooser.files[0];
     var fileName = file.name.toLowerCase();
@@ -146,9 +159,6 @@
     }
   });
 
-  var fileChooserAvatar = document.querySelector('#avatar');
-  var avatarPreview = document.querySelector('.notice__preview img');
-
   fileChooserAvatar.addEventListener('change', function () {
     var file = fileChooserAvatar.files[0];
     var fileName = file.name.toLowerCase();
@@ -166,4 +176,4 @@
       reader.readAsDataURL(file);
     }
   });
-})();
+})(window);

@@ -2,6 +2,7 @@
 
 (function (global) {
   var ERROR_CODE = 400;
+  var TIME = 2000;
 
   var getError = function (error) {
     var note = document.createElement('div');
@@ -19,7 +20,7 @@
 
     setTimeout(function () {
       note.remove();
-    }, 2000);
+    }, TIME);
   };
 
   var getSucces = function () {
@@ -31,25 +32,25 @@
 
     setTimeout(function () {
       note.remove();
-    }, 2000);
+    }, TIME);
   };
 
-  var getEmptyData = function () {
+  var reset = function () {
     var note = document.createElement('div');
 
     document.body.appendChild(note);
     note.classList.add('descript-notice');
-    note.textContent = 'Ваши данные успешно отправлены';
+    note.textContent = 'Введенные данные сброшены';
 
     setTimeout(function () {
       note.remove();
-    }, 2000);
+    }, TIME);
   };
 
   global.notice = {
     error: getError,
     succes: getSucces,
-    empty: getEmptyData
+    reset: reset
   };
 
 })(window);
