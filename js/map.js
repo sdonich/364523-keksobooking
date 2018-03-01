@@ -7,25 +7,15 @@
 
   var mainMap = document.querySelector('.map');
   var mainPin = mainMap.querySelector('.map__pin--main');
-  var mainCoordinateX = mainPin.offsetLeft + MAIN_PIN_RADIUS;
-  var mainCoordinateY = mainPin.offsetTop + MAIN_PIN_RADIUS;
   var mapFilter = mainMap.querySelector('.map__filters-container');
   var formNotice = document.querySelector('.notice__form');
-  var fieldsets = formNotice.querySelectorAll('fieldset');
-  var mainPinAdress = fieldsets[2].querySelector('input');
-  mainPinAdress.value = mainCoordinateX + ', ' + mainCoordinateY;
+
+  window.getStartCoords();
 
   var rightMapBorder = mainMap.clientWidth - MAIN_PIN_RADIUS;
   var leftMapBorder = MAIN_PIN_RADIUS;
   var bottomMapBorder = mainMap.clientHeight - MAIN_PIN_RADIUS - NEEDLE - mapFilter.clientHeight;
   var topMapBorder = HORIZON - MAIN_PIN_RADIUS;
-
-  var getFormCoords = function () {
-    mainCoordinateX = mainPin.offsetLeft + MAIN_PIN_RADIUS;
-    mainCoordinateY = mainPin.offsetTop + MAIN_PIN_RADIUS + NEEDLE;
-    mainPinAdress.value = mainCoordinateX + ', ' + mainCoordinateY;
-  };
-
 
   global.setupMainPinHandler = function (evt) {
     evt.preventDefault();
@@ -56,12 +46,12 @@
       if (mainPin.offsetLeft - shift.x > leftMapBorder && mainPin.offsetLeft - shift.x < rightMapBorder) {
         mainPin.style.left = mainPin.offsetLeft - shift.x + 'px';
       }
-      getFormCoords();
+      window.getFormCoords();
     };
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
 
-      getFormCoords();
+      window.getFormCoords();
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
     };

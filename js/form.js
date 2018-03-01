@@ -26,6 +26,7 @@
       document.querySelector('.map__filters').reset();
       window.remove.mapPins();
       window.remove.popup();
+      window.getStartCoords();
       mainMap.classList.add('map--faded');
       formNotice.classList.add('notice__form--disabled');
 
