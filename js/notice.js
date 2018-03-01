@@ -1,6 +1,8 @@
 'use strict';
 
 (function (global) {
+  var ERROR_CODE = 400;
+  var TIME = 2000;
 
   var getError = function (error) {
     var note = document.createElement('div');
@@ -10,7 +12,7 @@
 
     if (error.code === 0 || !error.code) {
       note.textContent = 'Произошла ошибка соединения с сервером. Проверьте интернет-соединение';
-    } else if (error.code === 400) {
+    } else if (error.code === ERROR_CODE) {
       note.textContent = 'Ошибка ' + error.code + '. ' + 'Ваши данные не соответсвуют требованиям';
     } else {
       note.textContent = 'Oops! Произошла ошибка: ' + error.code;
@@ -18,7 +20,7 @@
 
     setTimeout(function () {
       note.remove();
-    }, 2000);
+    }, TIME);
   };
 
   var getSucces = function () {
@@ -30,12 +32,25 @@
 
     setTimeout(function () {
       note.remove();
-    }, 2000);
+    }, TIME);
+  };
+
+  var reset = function () {
+    var note = document.createElement('div');
+
+    document.body.appendChild(note);
+    note.classList.add('descript-notice');
+    note.textContent = 'Введенные данные сброшены';
+
+    setTimeout(function () {
+      note.remove();
+    }, TIME);
   };
 
   global.notice = {
     error: getError,
-    succes: getSucces
+    succes: getSucces,
+    reset: reset
   };
 
 })(window);

@@ -1,6 +1,7 @@
 'use strict';
 
 (function (global) {
+
   var filterWifi = document.querySelector('#filter-wifi');
   var filterDishwasher = document.querySelector('#filter-dishwasher');
   var filterParking = document.querySelector('#filter-parking');
@@ -12,104 +13,64 @@
   var filterPrice = document.querySelector('#housing-price');
   var filterType = document.querySelector('#housing-type');
 
-  global.useFilter = function (adverts) {
-    return adverts.filter(function(ad) {
-      var features = ad.offer.features;
+  var featureFilter = function (item) {
+    var wifiPresented = item.offer.features.indexOf('wifi') !== -1;
+    var dishwasherPresented = item.offer.features.indexOf('dishwasher') !== -1;
+    var parkingPresented = item.offer.features.indexOf('parking') !== -1;
+    var washerPresented = item.offer.features.indexOf('washer') !== -1;
+    var elevatorPresented = item.offer.features.indexOf('elevator') !== -1;
+    var conditionerPresented = item.offer.features.indexOf('conditioner') !== -1;
 
-      var wifi = filterWifi.checked && features.indexOf('wifi') > -1;
-      var dw = filterDishwasher.checked && features.indexOf('dishwasher') > -1;
-      // ...
+    var result = true;
+    result = result && (filterWifi.checked ? wifiPresented : true);
+    result = result && (filterDishwasher.checked ? dishwasherPresented : true);
+    result = result && (filterParking.checked ? parkingPresented : true);
+    result = result && (filterWasher.checked ? washerPresented : true);
+    result = result && (filterElevator.checked ? elevatorPresented : true);
+    result = result && (filterConditioner.checked ? conditionerPresented : true);
 
-      return wifi || dw; // || anotherFilter;
-    });
+    return result;
+  };
 
-    if (filterWifi.checked) {
-      data = data.filter(function (advert) {
-        return advert.offer.features.indexOf('wifi') !== -1;
-      });
+  var guestsFilter = function (item) {
+    var matchGuests = item.offer.guests === +filterGuests.value;
+    return filterGuests.value === 'any' ? true : matchGuests;
+  };
+
+  var roomsFilter = function (item) {
+    var matchRooms = item.offer.rooms === +filterRooms.value;
+    return filterRooms.value === 'any' ? true : matchRooms;
+  };
+
+  var priceFilter = function (item) {
+    var price = item.offer.price;
+    if (filterPrice.value === 'any') {
+      return true;
     }
-    if (filterDishwasher.checked) {
-      data = data.filter(function (advert) {
-        return advert.offer.features.indexOf('dishwasher') !== -1;
-      });
-    }
-    if (filterParking.checked) {
-      data = data.filter(function (advert) {
-        return advert.offer.features.indexOf('parking') !== -1;
-      });
-    }
-    if (filterWasher.checked) {
-      data = data.filter(function (advert) {
-        return advert.offer.features.indexOf('washer') !== -1;
-      });
-    }
-    if (filterElevator.checked) {
-      data = data.filter(function (advert) {
-        return advert.offer.features.indexOf('elevator') !== -1;
-      });
-    }
-    if (filterConditioner.checked) {
-      data = data.filter(function (advert) {
-        return advert.offer.features.indexOf('conditioner') !== -1;
-      });
-    }
-    if (filterGuests.value === '1') {
-      data = data.filter(function (advert) {
-        return advert.offer.guests === 1;
-      });
-    }
-    if (filterGuests.value === '2') {
-      data = data.filter(function (advert) {
-        return advert.offer.guests === 2;
-      });
-    }
-    if (filterRooms.value === '1') {
-      data = data.filter(function (advert) {
-        return advert.offer.rooms === 1;
-      });
-    }
-    if (filterRooms.value === '2') {
-      data = data.filter(function (advert) {
-        return advert.offer.rooms === 2;
-      });
-    }
-    if (filterRooms.value === '3') {
-      data = data.filter(function (advert) {
-        return advert.offer.rooms === 3;
-      });
-    }
+
     if (filterPrice.value === 'middle') {
-      data = data.filter(function (advert) {
-        return advert.offer.price >= 10000 && advert.offer.price <= 50000;
-      });
+      return price >= 10000 && price <= 50000;
+    } else if (filterPrice.value === 'low') {
+      return price <= 10000;
     }
-    if (filterPrice.value === 'low') {
-      data = data.filter(function (advert) {
-        return advert.offer.price <= 10000;
-      });
-    }
-    if (filterPrice.value === 'high') {
-      data = data.filter(function (advert) {
-        return advert.offer.price >= 50000;
-      });
-    }
-    if (filterType.value === 'flat') {
-      data = data.filter(function (advert) {
-        return advert.offer.type === 'flat';
-      });
-    }
-    if (filterType.value === 'house') {
-      data = data.filter(function (advert) {
-        return advert.offer.type === 'house';
-      });
-    }
-    if (filterType.value === 'bungalo') {
-      data = data.filter(function (advert) {
-        return advert.offer.type === 'bungalo';
-      });
-    }
-    return data;
+
+    return price >= 50000;
+  };
+
+  var houseTypeFilter = function (item) {
+    var matchType = item.offer.type === filterType.value;
+    return filterType.value === 'any' ? true : matchType;
+  };
+
+  global.useFilter = function (adverts) {
+    return adverts.filter(function (item) {
+      return (
+        featureFilter(item) &&
+        guestsFilter(item) &&
+        roomsFilter(item) &&
+        priceFilter(item) &&
+        houseTypeFilter(item)
+      );
+    });
   };
 })(window);
-
-

@@ -3,6 +3,7 @@
 (function (global) {
   var URL = 'https://js.dump.academy/keksobooking';
   var URL_DATA = 'https://js.dump.academy/keksobooking/data';
+  var OK_STATUS = 200;
 
   global.backend = {
     save: function (data, onLoad, onError) {
@@ -10,7 +11,7 @@
       xhr.responseType = 'json';
 
       xhr.addEventListener('load', function () {
-        if (xhr.status !== 200) {
+        if (xhr.status !== OK_STATUS) {
           var error = {
             code: xhr.status
           };
@@ -36,7 +37,7 @@
           code: xhr.status
         };
 
-        if (xhr.status !== 200) {
+        if (xhr.status !== OK_STATUS) {
           onError(error);
         } else {
           onLoad(xhr.response);

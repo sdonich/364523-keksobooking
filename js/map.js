@@ -1,32 +1,23 @@
 'use strict';
 
-(function () {
+(function (global) {
   var MAIN_PIN_RADIUS = 31;
   var NEEDLE = 22;
   var HORIZON = 150;
+  var BOTTOM_HORIZON = 500;
 
   var mainMap = document.querySelector('.map');
   var mainPin = mainMap.querySelector('.map__pin--main');
-  var mainCoordinateX = mainPin.offsetLeft + MAIN_PIN_RADIUS;
-  var mainCoordinateY = mainPin.offsetTop + MAIN_PIN_RADIUS;
-  var mapFilter = mainMap.querySelector('.map__filters-container');
   var formNotice = document.querySelector('.notice__form');
-  var fieldsets = formNotice.querySelectorAll('fieldset');
-  var mainPinAdress = fieldsets[2].querySelector('input');
-  mainPinAdress.value = mainCoordinateX + ', ' + mainCoordinateY;
+
+  window.getCoords.start();
 
   var rightMapBorder = mainMap.clientWidth - MAIN_PIN_RADIUS;
   var leftMapBorder = MAIN_PIN_RADIUS;
-  var bottomMapBorder = mainMap.clientHeight - MAIN_PIN_RADIUS - NEEDLE - mapFilter.clientHeight;
+  var bottomMapBorder = BOTTOM_HORIZON - MAIN_PIN_RADIUS - NEEDLE;
   var topMapBorder = HORIZON - MAIN_PIN_RADIUS;
 
-  var getFormCoords = function () {
-    mainCoordinateX = mainPin.offsetLeft + MAIN_PIN_RADIUS;
-    mainCoordinateY = mainPin.offsetTop + MAIN_PIN_RADIUS + NEEDLE;
-    mainPinAdress.value = mainCoordinateX + ', ' + mainCoordinateY;
-  };
-
-  mainPin.querySelector('img').addEventListener('mousedown', function (evt) {
+  global.setupMainPinHandler = function (evt) {
     evt.preventDefault();
 
     mainMap.classList.remove('map--faded');
@@ -55,28 +46,20 @@
       if (mainPin.offsetLeft - shift.x > leftMapBorder && mainPin.offsetLeft - shift.x < rightMapBorder) {
         mainPin.style.left = mainPin.offsetLeft - shift.x + 'px';
       }
-      getFormCoords();
+      window.getCoords.form();
     };
-
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
 
-      getFormCoords();
+      window.getCoords.form();
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
     };
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
-  });
-
-  var dataPins = function (evt) {
-    evt.preventDefault();
-
-    window.createMapPins();
-    mainPin.removeEventListener('click', dataPins);
   };
-
-  mainPin.addEventListener('click', dataPins);
-})();
+  mainPin.addEventListener('mousedown', window.setupMainPinHandler);
+  mainPin.addEventListener('click', window.loadDataPinHandler);
+})(window);
 

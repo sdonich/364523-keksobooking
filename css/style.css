@@ -270,10 +270,16 @@ textarea:focus
 }
 
 .map__pin:not(.map__pin--main):hover::after,
-.map__pin:not(.map__pin--main):active::after
+.map__pin:not(.map__pin--main):active::after,
+.map__pin:not(.map__pin--main):focus::after
 
 {
     background-position: 0 -88px;
+}
+.map__pin:focus
+
+{
+    outline: none;
 }
 
 .map__pin:active img
@@ -855,7 +861,8 @@ textarea:focus
     background-position: -10px -10px;
 }
 
-.descript-notice {
+.descript-notice
+{
   font-family: Roboto, sans-serif;
   font-size: 22px;
   font-weight: bold;
@@ -872,4 +879,16 @@ textarea:focus
   background-color: rgba(255, 255, 255, 1);
   box-shadow: 12px 12px 5px rgba(0, 0, 0, 0.5);
   border-radius: 5px;
+}
+
+.popup__close:active,
+.popup__close:focus
+{
+  box-shadow: 0 0 4px 1px #ff6547;
+  outline: none;
+}
+
+.form__photo-container .drop-zone
+{
+    background-size: 100%;
 }
